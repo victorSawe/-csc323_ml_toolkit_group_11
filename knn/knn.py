@@ -1,3 +1,13 @@
+"""
+The following is an implementation of the KNN algorithm
+
+The dataset that can be used with this algorithm must be in the format:
+
+[ attr_1, attr_2, attr_3, attr_4, class ]
+
+The algorithm includes a sixth column [ distance ] for the training data
+
+"""
 import math
 import collections
 import random
@@ -25,7 +35,7 @@ while i < b:
     i += 1
 
 """ create test set """
-c, d = 6, 50
+c, d = 5, 50
 test = [[0 for y in range(c)] for z in range(d)] # initialize testing set list
 
 k = 0
@@ -58,7 +68,8 @@ while n < d:
     train = sorted(train, key=lambda sin: sin[5])
 
     """ select K nearest neighbour """
-    val_k = 1
+    k_options = [1, 3, 5, 7]
+    val_k = random.choice(k_options) # chose random value from the options
 
     q = 0
     classes = list() # initialize empty list
