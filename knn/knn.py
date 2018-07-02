@@ -1,42 +1,82 @@
-import math                                             # import math library
+import math
+import collections
+import random
 
-set = list()                                            # empty list
+""" read from file, create two datasets  """
+iris = list() # empty list
 
-f = open("iris.data.txt", "r")                          # open file
-for x in f:                                             # read from file
-    set.append(x)                                       # save to list
+f = open('iris.data.txt', 'r') # open file
+for x in f: # read from file
+    iris.append(x) # save to list
 
-w, h = 6, 150                                           # columns, rows
-data = [[0 for x in range(w)] for y in range(h)]        # initialize multidimensional list
+random.shuffle(iris) # shuffle array
 
-i = 0                                                   # row counter
-while i < 150:                                          # while i < no_of_rows
-    attribute = set[i].split(',')                       # split each set into attributes
-    j = 0                                               # column counter
-    while j < 5:                                        # while i < no_of_columns
-        data[i][j] = attribute[j]                       # save values in data matrix
-        j += 1                                          # increment column counter
-    i += 1                                              # increment row counter
+""" create training set """
+a, b = 6, 100
+train = [[0 for w in range(a)] for x in range(b)] # initialize training set list
 
-s_l = 1.2
-s_w = 0.4
-p_l = 1
-p_w = 0.9
+i = 0
+while i < b:
+    tr_attribute = iris[i].split(',')
+    j = 0
+    while j < 5:
+        train[i][j] = tr_attribute[j]
+        j += 1
+    i += 1
 
-l = 0
-while l < 150:                                          # calculate the euclidean distance
+""" create test set """
+c, d = 6, 50
+test = [[0 for y in range(c)] for z in range(d)] # initialize testing set list
 
-    data[l][5] = math.sqrt(
-    math.pow((s_l - float(data[l][0])), 2)
-    + math.pow((s_w - float(data[l][1])), 2)
-    + math.pow((p_l - float(data[l][2])), 2)
-    + math.pow((p_w - float(data[l][3])), 2))
-
-    l += 1
-
-data = sorted(data, key=lambda sin: sin[5])             # sort array using distance data[5]
-
-m = 0
-while m < 150:
-    print(data[m][5])
+k = 0
+m = b
+while k < d:
+    tst_attribute = iris[m].split(',')
+    l = 0
+    while l < 5:
+        test[k][l] = tst_attribute[l]
+        l += 1
+    k += 1
     m += 1
+
+""" calculate euclidean distance for each test data """
+successful = 0
+failed = 0
+n = 0
+while n < d:
+    p = 0
+    while p < b:
+        train[p][5] = math.sqrt(
+        math.pow((float(test[n][0]) - float(train[p][0])), 2)
+        + math.pow((float(test[n][1]) - float(train[p][1])), 2)
+        + math.pow((float(test[n][2]) - float(train[p][2])), 2)
+        + math.pow((float(test[n][3]) - float(train[p][3])), 2))
+        p += 1
+
+
+    """ sort train array in asc order of euclidean distance train[][5] """
+    train = sorted(train, key=lambda sin: sin[5])
+
+    """ select K nearest neighbour """
+    val_k = 1
+
+    q = 0
+    classes = list() # initialize empty list
+    while q < val_k:
+        classes.append(train[q][4]) # append all the top 'K' classes to list
+        q += 1
+
+    common = collections.Counter(classes) # initialize Counter with classes
+    result = common.most_common(1) # select most common class
+
+    if test[n][4] == result[0][0]:
+        successful += 1
+        print('Successful Prediction') # success
+    else:
+        failed += 1
+        print('Failed Prediction') # failure
+
+    n += 1
+
+print('==========')
+print('{} predictions are successful, and {} predictions fail when K is {}' . format(successful, failed, val_k))
