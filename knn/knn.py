@@ -12,7 +12,7 @@ import math
 import collections
 import random
 
-""" read from file, create two datasets  """
+""" read data from file  """
 iris = list() # empty list
 
 f = open('iris.data.txt', 'r') # open file
@@ -34,7 +34,7 @@ while i < b:
         j += 1
     i += 1
 
-""" create test set """
+""" create testing set """
 c, d = 5, 50
 test = [[0 for y in range(c)] for z in range(d)] # initialize testing set list
 
@@ -49,9 +49,9 @@ while k < d:
     k += 1
     m += 1
 
-""" calculate euclidean distance for each test data """
-successful = 0
-failed = 0
+""" calculate euclidean distance for each row of test data against all training data """
+total_successful = 0
+total_failed = 0
 n = 0
 while n < d:
     p = 0
@@ -64,7 +64,7 @@ while n < d:
         p += 1
 
 
-    """ sort train array in asc order of euclidean distance train[][5] """
+    """ sort training list in asc order of euclidean distance train[x][5] """
     train = sorted(train, key=lambda sin: sin[5])
 
     """ select K nearest neighbour """
@@ -81,13 +81,13 @@ while n < d:
     result = common.most_common(1) # select most common class
 
     if test[n][4] == result[0][0]:
-        successful += 1
+        total_successful += 1
         print('Successful Prediction') # success
     else:
-        failed += 1
+        total_failed += 1
         print('Failed Prediction') # failure
 
     n += 1
 
 print('==========')
-print('{} predictions are successful, and {} predictions fail when K is {}' . format(successful, failed, val_k))
+print('{} prediction(s) successful, {} prediction(s) fail, K is {}' . format(total_successful, total_failed, val_k))
