@@ -43,7 +43,7 @@ m = b
 while k < d:
     tst_attribute = iris[m].split(',')
     l = 0
-    while l < 5:
+    while l < c:
         test[k][l] = tst_attribute[l]
         l += 1
     k += 1
