@@ -19,7 +19,7 @@ f = open('iris.data.txt', 'r') # open file
 for x in f: # read from file
     iris.append(x) # save to list
 
-random.shuffle(iris) # shuffle array
+random.shuffle(iris) # shuffle list
 
 """ create training set """
 a, b = 6, 100
