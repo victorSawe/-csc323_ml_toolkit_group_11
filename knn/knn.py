@@ -29,7 +29,7 @@ i = 0
 while i < b:
     tr_attribute = iris[i].split(',')
     j = 0
-    while j < 5:
+    while j < a - 1:
         train[i][j] = tr_attribute[j]
         j += 1
     i += 1

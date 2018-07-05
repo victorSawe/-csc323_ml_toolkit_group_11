@@ -4,6 +4,4 @@
 
 The following is the CSC 323 Machine Learning repository for Group 11.
 
-All the first principle's, machine learning code posted on this repository is intended for class related work only.
-
-The following material is property of the University of Nairobi.
+&copy; 2018, University of Nairobi.
