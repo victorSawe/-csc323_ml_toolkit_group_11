@@ -28,21 +28,13 @@ def sigmoid(x):
   return 1 / (1 + math.exp(-x))
 
 # hidden layer function
-def hidden_layer(arr):
+def hidden_layer(arr, w):
     # initialize weights array with random values [0, 1]
-    weights = np.random.rand(np.size(arr),2)
+    weights = w
 
     """ summation function """
     # add all the input * weights
     output = np.matmul(arr, weights) # input X weight, summation function
-
-    # calculate bias
-    bias_x = random.uniform(0,1) # bias weight for first hidden layer node
-    bias_y = random.uniform(0,1) # bias weight for second hidden layer node
-
-    # add the bias to the total summation
-    output[0] = output[0] + bias_x # add bias for node x
-    output[1] = output[1] + bias_y # add bias for node y
 
     """ activation function """
     # pass through the sigmoid function
@@ -52,19 +44,13 @@ def hidden_layer(arr):
     return output
 
 # output layer function
-def output_layer(arr):
+def output_layer(arr, w):
     # initialize weights array with random values [0, 1]
-    weights = np.random.rand(np.size(arr),1)
+    weights = w
 
     """ summation function """
     # add all the input * weights
     output = np.matmul(arr, weights) # input X weight, summation function
-
-    # calculate bias
-    bias_x = random.uniform(0,1) # bias weight for first hidden layer node
-
-    # add the bias to the total summation
-    output = output + bias_x # add bias for node x
 
     """ activation function """
     # pass through the sigmoid function
@@ -88,17 +74,43 @@ while k < np.size(train,0): # while k < 568
 
     """ input layer output """
     il_output = train_row[1:9:1] # row data attributes
+    weights_i = np.random.rand(np.size(il_output),2) # weights for input layer output
 
     """ hidden layer output """
-    hl_output = hidden_layer(il_output)
+    hl_output = hidden_layer(il_output, weights_i)
+    weights_h = np.random.rand(np.size(hl_output),1)
 
     """ output layer output """
-    system_output = output_layer(hl_output)
+    system_output = output_layer(hl_output, weights_h)
 
     """ error """
-    error = pow(expected_output-system_output,2) #calculate error
-    print(error)
+    error = pow(expected_output-system_output,2) # calculate error
 
-    """ continue doing backpropagation """
+    """ backpropagation """
+    lr = 0.5 # learning rate - N
+
+    #""" 1. for output layer node """
+    d = (expected_output - system_output) * system_output * (1. - system_output) # derivative variance - E = d
+    lr_d_temp = lr * d # lr * E(d)
+
+    ciw_h = np.full_like(weights_h, 0)
+    ciw_h =  np.multiply(hl_output, lr_d_temp) # change in weight
+
+    # calculate new weight for hidden layer output weights
+    weights_h = np.add(weights_h, ciw_h)
+
+    #""" 2. for hidden layer node """
+    # calculate e
+    e = weights_h * d
+    #d = np.dot(weights_i, d) * weights_i * (1. - weights_i) # derivative variance - E = d
+    #lr_d_temp = lr * d # lr * E(d)
+
+    #ciw_i = np.full_like(weights_i, 0)
+    #ciw_i = np.multiply(lr_d_temp, il_output) # change in weight
+    
+    # calculate new weight for input layer output weights
+    #weights_i = np.add(weights_i, ciw_i)
+
+    print(hl_output)
 
     k += 1
