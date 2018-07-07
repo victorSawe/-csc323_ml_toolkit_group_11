@@ -56,9 +56,9 @@ def main():
     diabetes = normalize(diabetes) 
 
     # split data into train[], test[] sets
-    # train set = total_sizhl_Eof_dataset - 200
+    # train set = total_size_of_dataset - 200
     # test set = 200
-    train,test = diabetes[:(np.size(diabetes,0)-200),:], diabetes[(np.size(diabetes,0)-200):,:]
+    train,_test = diabetes[:np.size(diabetes,0) - 200,:], diabetes[200:,:]
 
     # for each row of train[]
     k = 0
@@ -83,7 +83,7 @@ def main():
         lr = 0.6 # learning rate
 
         epoch = 0
-        while epoch < 1000:
+        while epoch < 1:
             """ 
                 forward propagation
             """
@@ -94,37 +94,40 @@ def main():
             hl_output = neuron(il_output, hl_weights) # pass through neuron function
             
             # output layer
-            system = np.asscalar(neuron(hl_output, ol_weights)) # pass through neuron function
+            system = neuron(hl_output, ol_weights) # pass through neuron function
 
             # loss fuction
-            error = 0.5 * pow(expected-system,2) # calculate error
+            _error = 0.5 * pow(expected-system,2) # calculate error
 
             """ 
                 backpropagation
             """
             """ output layer weights adjustment """
             # calculate change in weight for output layer weights - nEX
-            ol_E = system * (1 - system) * (expected - system)
-            nEX = np.reshape(lr * ol_E * hl_output, (2, 1))
+            E = system * (1 - system) * (expected - system)
+            nEX = lr * E * hl_output
 
             # update the output layer weights
             ol_weights = ol_weights + nEX
 
             """ hidden layer weights adjustment """
-            # calculate change in weight for hidden layer weights - nEX
-            hl_E = np.full_like(ol_weights, 0)
-            
-            hl_E[0][0] = (ol_weights[0][0] * ol_E) * (hl_output[0]) * (1 - hl_output[0]) # a x g x (1-g)
-            hl_E[1][0] = (ol_weights[1][0] * ol_E) * (hl_output[1]) * (1 - hl_output[1]) # b x h x (1-h)
+            # calculate change in weight for hidden layer weights - nE_X
+            E_ = np.full_like(ol_weights, 0)
+            m = 0
+            while m < np.size(ol_weights[0]): # while m < row
+                E_[0] = (ol_weights[m][0] * E) * (hl_output[0]) * (1 - hl_output[0]) # a x g x (1-g)
+                E_[1] = (ol_weights[m][1] * E) * (hl_output[1]) * (1 - hl_output[1]) # b x h x (1-h)
+                m += 1
             
             n = 0
             while n < np.size(ol_weights[0]): # while n < row
-                hl_weights[n][0] = hl_weights[n][0] + (lr * hl_E[0][0] * il_output[n]) # w + nEX
-                hl_weights[n][1] = hl_weights[n][1] + (lr * hl_E[1][0] * il_output[n]) # w + nEX
+                hl_weights[n][0] = hl_weights[n][0] + (lr * E_[n][0] * il_output[n]) # nE_X
+                hl_weights[n][1] = hl_weights[n][1] + (lr * E_[n][1] * il_output[n]) # nE_X
                 n += 1
 
             epoch += 1
-        print("The error of dataset {0} is {1}.".format(k+1, error))
+
+        print(_error)
 
         k += 1
 
