@@ -1,3 +1,6 @@
+"""
+The following is an implementation of the Backpropagation algorithm
+"""
 import numpy as np
 import random
 import math
