@@ -19,9 +19,9 @@ def main():
     #TODO; make out put function to simplify here 
     plt.imshow(nodes, interpolation='none')
     plt.savefig("init.png")
-    """"""
-    """ Learning """
-    """"""
+    """
+    Learning
+    """
     # teacher signal
     teachers = np.random.rand(n_teacher,3)
     for i in range(n_teacher):
