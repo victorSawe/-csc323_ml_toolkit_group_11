@@ -69,7 +69,7 @@ def neighbourhood(t):#neighbourhood radious
 
 def learning_ratio(t):
     halflife = float(n_teacher/4) #for testing
-    initial  = 0.1
+    initial  = 0.3
     return initial*np.exp(-t/halflife)
 
 def learning_radius(t, d):

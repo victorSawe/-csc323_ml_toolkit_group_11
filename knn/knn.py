@@ -68,7 +68,7 @@ while n < d:
     train = sorted(train, key=lambda sin: sin[5])
 
     """ select K nearest neighbour """
-    k_options = [1, 3, 5, 7]
+    k_options = [5, 7]
     val_k = random.choice(k_options) # chose random value from the options
 
     q = 0
