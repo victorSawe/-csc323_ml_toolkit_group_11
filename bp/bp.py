@@ -1,3 +1,6 @@
+"""
+The following is an implementation of the Backpropagation algorithm
+"""
 import numpy as np
 import random
 import math
@@ -58,8 +61,20 @@ def main():
     # split data into train[], test[] sets
     # train set = total_sizhl_Eof_dataset - 200
     # test set = 200
-    train,test = diabetes[:(np.size(diabetes,0)-200),:], diabetes[(np.size(diabetes,0)-200):,:]
+    train,_test = diabetes[:(np.size(diabetes,0)-200),:], diabetes[(np.size(diabetes,0)-200):,:]
 
+    """
+        propagation utilities
+    """
+    # hidden layer randomized weights
+    hl_weights = np.random.rand(np.size(train,1)-1,2)
+
+    # output layer randomized weights
+    ol_weights = np.random.rand(2,1)
+
+    # back propagation attributes
+    lr = 0.6 # learning rate
+    
     # for each row of train[]
     k = 0
     while k < np.size(train,0): # while k < row
@@ -67,20 +82,12 @@ def main():
             propagation utilities
         """
         row = train[k] # save all data to new array (row)
+        
         # data classes (expected output)
         expected = row[np.size(row)-1]
         
         # data attributes (inputs)
         attributes = row[1:9:1]
-
-        # hidden layer randomized weights
-        hl_weights = np.random.rand(np.size(attributes),2)
-
-        # output layer randomized weights
-        ol_weights = np.random.rand(2,1)
-
-        # back propagation attributes
-        lr = 0.6 # learning rate
 
         epoch = 0
         while epoch < 1000:
@@ -124,7 +131,7 @@ def main():
                 n += 1
 
             epoch += 1
-        print("The error of dataset {0} is {1}.".format(k+1, error))
+        print("The error of dataset {0} is {1}".format(k+1, error))
 
         k += 1
 
